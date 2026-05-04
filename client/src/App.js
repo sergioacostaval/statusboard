@@ -4,11 +4,11 @@ import LoginForm from "./components/LoginForm";
 import StatusBoard from "./components/StatusBoard";
 import "./App.css";
 
-const defaultServerUrl = window.location.hostname.includes("vercel.app")
-    ? "https://statusboard-backend.onrender.com"
-    : "http://localhost:3001";
+const isVercel = window.location.hostname.includes("vercel.app");
+const renderServerUrl = "https://statusboard-backend.onrender.com";
+const localServerUrl = "http://localhost:3001";
 
-const SERVER_URL = (import.meta.env.VITE_SERVER_URL || defaultServerUrl).replace(/\/$/, "");
+const SERVER_URL = (isVercel ? renderServerUrl : import.meta.env.VITE_SERVER_URL || localServerUrl).replace(/\/$/, "");
 
 function App() {
     const [socket, setSocket] = useState(null);
