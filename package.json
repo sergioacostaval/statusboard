@@ -1,0 +1,11 @@
+{
+  "name": "statusboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start:client": "npm --prefix client start",
+    "start:server": "npm --prefix server start",
+    "build:client": "npm --prefix client run build"
+  }
+}

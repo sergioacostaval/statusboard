@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: statusboard-backend
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      CLIENT_URL: http://localhost:5173
+    volumes:
+      - ./server:/app
+      - /app/node_modules
