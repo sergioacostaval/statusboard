@@ -37,3 +37,4 @@ function MemberCard({ member, isCurrentUser, onChangeStatus }) {
 }
 
 export default MemberCard;
+

@@ -112,3 +112,4 @@ function StatusBoard({ socket, currentUser, members, events, messages }) {
 }
 
 export default StatusBoard;
+
