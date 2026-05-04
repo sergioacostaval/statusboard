@@ -12,3 +12,18 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: statusboard-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_SERVER_URL: http://localhost:3001
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    depends_on:
+      - backend
