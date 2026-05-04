@@ -4,7 +4,7 @@ import LoginForm from "./components/LoginForm";
 import StatusBoard from "./components/StatusBoard";
 import "./App.css";
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || "http://localhost:3001";
+const SERVER_URL = (import.meta.env.VITE_SERVER_URL || "http://localhost:3001").replace(/\/$/, "");
 
 function App() {
     const [socket, setSocket] = useState(null);
@@ -12,11 +12,20 @@ function App() {
     const [members, setMembers] = useState([]);
     const [events, setEvents] = useState([]);
     const [messages, setMessages] = useState([]);
+    const [connectionError, setConnectionError] = useState("");
 
     // Cree la connexion Socket.IO une seule fois.
     useEffect(() => {
         const newSocket = io(SERVER_URL);
         setSocket(newSocket);
+
+        newSocket.on("connect", () => {
+            setConnectionError("");
+        });
+
+        newSocket.on("connect_error", () => {
+            setConnectionError("Le serveur n'est pas connecte");
+        });
 
         newSocket.on("current:user", (user) => {
             setCurrentUser(user);
@@ -41,7 +50,11 @@ function App() {
 
     // Envoie le nom au serveur pour rejoindre le tableau.
     function handleJoin(name) {
-        if (!socket) return;
+        if (!socket || !socket.connected) {
+            setConnectionError("Le serveur n'est pas connecte");
+            return;
+        }
+
         socket.emit("user:join", { name });
     }
 
@@ -53,7 +66,7 @@ function App() {
             </section>
 
             {!currentUser ? (
-                <LoginForm onJoin={handleJoin} />
+                <LoginForm onJoin={handleJoin} serverError={connectionError} />
             ) : (
                 <StatusBoard
                     socket={socket}

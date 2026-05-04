@@ -5,7 +5,7 @@ function StatusBoard({ socket, currentUser, members, events, messages }) {
     const [message, setMessage] = useState("");
     const onlineCount = members.filter((member) => member.status === "En ligne").length;
     const absentCount = members.filter((member) => member.status === "Absent").length;
-    const busyCount = members.filter((member) => member.status === "Occupé").length;
+    const busyCount = members.filter((member) => member.status === "Occupe").length;
 
     // Demande au serveur de changer le statut.
     function changeStatus(status) {

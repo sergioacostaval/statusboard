@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function LoginForm({ onJoin }) {
+function LoginForm({ onJoin, serverError }) {
     const [name, setName] = useState("");
     const [error, setError] = useState("");
 
@@ -31,6 +31,7 @@ function LoginForm({ onJoin }) {
             />
 
             {error && <p className="error">{error}</p>}
+            {serverError && <p className="error">{serverError}</p>}
 
             <button type="submit">Rejoindre</button>
         </form>

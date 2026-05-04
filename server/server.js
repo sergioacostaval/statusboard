@@ -7,15 +7,25 @@ const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 3001;
 const CLIENT_URL = process.env.CLIENT_URL || "*";
+const CLIENT_URLS = CLIENT_URL.split(",").map((url) => url.trim());
+
+const corsOptions = {
+    origin(origin, callback) {
+        if (!origin || CLIENT_URL === "*" || CLIENT_URLS.includes(origin)) {
+            callback(null, true);
+            return;
+        }
+
+        callback(new Error("CORS bloque"));
+    },
+    methods: ["GET", "POST"],
+};
 
 const io = new Server(server, {
-    cors: {
-        origin: CLIENT_URL,
-        methods: ["GET", "POST"],
-    },
+    cors: corsOptions,
 });
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 const members = new Map();
@@ -25,6 +35,10 @@ const MAX_HISTORY = 30;
 
 app.get("/", (req, res) => {
     res.json({ message: "StatusBoard API" });
+});
+
+app.get("/health", (req, res) => {
+    res.json({ ok: true });
 });
 
 // Retourne l'heure simple pour l'historique.
@@ -86,7 +100,7 @@ io.on("connection", (socket) => {
     // Change le statut de l'utilisateur courant.
     socket.on("status:change", ({ status }) => {
         const member = members.get(socket.id);
-        const validStatuses = ["En ligne", "Absent", "Occupé"];
+        const validStatuses = ["En ligne", "Absent", "Occupe"];
 
         if (!member || !validStatuses.includes(status)) {
             return;
@@ -139,6 +153,6 @@ io.on("connection", (socket) => {
     });
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });

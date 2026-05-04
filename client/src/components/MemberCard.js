@@ -1,9 +1,8 @@
-const statuses = ["En ligne", "Absent", "Occupé"];
+const statuses = ["En ligne", "Absent", "Occupe"];
 
 function MemberCard({ member, isCurrentUser, onChangeStatus }) {
     const statusClass = member.status
         .toLowerCase()
-        .replace("é", "e")
         .replace(" ", "-");
 
     // Change seulement le statut du membre courant.
